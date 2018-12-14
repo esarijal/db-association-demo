@@ -6,7 +6,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 @Entity
-public class Comment extends BaseAuditModel {
+public class Comment extends BaseModel {
 
     private String review;
 

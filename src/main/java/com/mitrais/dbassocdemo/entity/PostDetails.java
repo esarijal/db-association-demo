@@ -3,7 +3,7 @@ package com.mitrais.dbassocdemo.entity;
 import javax.persistence.*;
 
 @Entity
-public class PostDetails extends BaseAuditModel {
+public class PostDetails extends BaseModel {
 
     private String metainfo;
 

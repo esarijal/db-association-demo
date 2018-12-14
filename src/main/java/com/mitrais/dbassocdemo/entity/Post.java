@@ -1,9 +1,11 @@
 package com.mitrais.dbassocdemo.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-public class Post extends BaseAuditModel {
+public class Post extends BaseModel {
     private String title;
     private String description;
     @Lob
@@ -14,6 +16,14 @@ public class Post extends BaseAuditModel {
                 fetch = FetchType.LAZY,
                 orphanRemoval = true)
     private PostDetails details;
+
+    @OneToMany(
+            mappedBy = "post",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true
+    )
+    private Set<PostTag> tags = new HashSet<>();
 
     public Post() {}
 
@@ -31,6 +41,23 @@ public class Post extends BaseAuditModel {
             details.setPost(this);
         }
         this.details = details;
+    }
+
+    public void addTag(Tag tag){
+        PostTag postTag = new PostTag(this, tag);
+        tags.add(postTag);
+        tag.getPosts().add(postTag);
+    }
+
+    public void removeTag(Tag tag){
+        tags.forEach(t -> {
+            if(t.getTag().equals(tag) && t.getPost().equals(this)){
+                tags.remove(t);
+                t.getTag().getPosts().remove(t);
+                t.setPost(null);
+                t.setTag(null);
+            }
+        });
     }
 
     public String getTitle() {

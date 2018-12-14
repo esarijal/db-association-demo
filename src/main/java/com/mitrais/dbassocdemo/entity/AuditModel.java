@@ -20,10 +20,8 @@ import java.time.LocalDateTime;
         value = {"createdAt", "updateAt", "createdBy", "updatedBy"},
         allowGetters = true
 )
-public abstract class BaseAuditModel implements Serializable {
-    @Id
-    @GeneratedValue
-    private long id;
+public abstract class AuditModel implements Serializable  {
+
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate
@@ -32,14 +30,6 @@ public abstract class BaseAuditModel implements Serializable {
     private String createdBy;
     @LastModifiedBy
     private String updatedBy;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -73,30 +63,5 @@ public abstract class BaseAuditModel implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        BaseAuditModel that = (BaseAuditModel) o;
-
-        if (id != that.id) return false;
-        if (createdAt != null ? !createdAt.equals(that.createdAt) : that.createdAt != null)
-            return false;
-        if (updatedAt != null ? !updatedAt.equals(that.updatedAt) : that.updatedAt != null)
-            return false;
-        if (createdBy != null ? !createdBy.equals(that.createdBy) : that.createdBy != null)
-            return false;
-        return updatedBy != null ? updatedBy.equals(that.updatedBy) : that.updatedBy == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
-        result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
-        result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
-        result = 31 * result + (updatedBy != null ? updatedBy.hashCode() : 0);
-        return result;
-    }
 }
