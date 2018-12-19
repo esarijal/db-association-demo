@@ -17,13 +17,11 @@ public class Post extends BaseModel {
                 orphanRemoval = true)
     private PostDetails details;
 
-    @OneToMany(
-            mappedBy = "post",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            orphanRemoval = true
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.LAZY
     )
-    private Set<PostTag> tags = new HashSet<>();
+    private Set<Tag> tags = new HashSet<>();
 
     public Post() {}
 
@@ -44,18 +42,15 @@ public class Post extends BaseModel {
     }
 
     public void addTag(Tag tag){
-        PostTag postTag = new PostTag(this, tag);
-        tags.add(postTag);
-        tag.getPosts().add(postTag);
+        tags.add(tag);
+        tag.getPosts().add(this);
     }
 
     public void removeTag(Tag tag){
         tags.forEach(t -> {
-            if(t.getTag().equals(tag) && t.getPost().equals(this)){
+            if(t.equals(tag)){
                 tags.remove(t);
-                t.getTag().getPosts().remove(t);
-                t.setPost(null);
-                t.setTag(null);
+                t.getPosts().remove(this);
             }
         });
     }
@@ -111,5 +106,9 @@ public class Post extends BaseModel {
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (details != null ? details.hashCode() : 0);
         return result;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
     }
 }

@@ -1,9 +1,6 @@
 package com.mitrais.dbassocdemo.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,13 +8,12 @@ import java.util.Set;
 public class Tag extends BaseModel {
     private String name;
 
-    @OneToMany(
-            mappedBy = "tag",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
+    @ManyToMany(
+            mappedBy = "tags",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
-    private Set<PostTag> posts = new HashSet<>();
+    private Set<Post> posts = new HashSet<>();
 
     private Tag(){}
 
@@ -33,7 +29,7 @@ public class Tag extends BaseModel {
         this.name = name;
     }
 
-    public Set<PostTag> getPosts() {
+    public Set<Post> getPosts() {
         return posts;
     }
 
